@@ -1,7 +1,7 @@
 from libqtile.widget import TextBox
 from typing import List
-from random import sample
-from threading import Timer
+from random import sample, shuffle
+from libqtile import qtile
 
 
 _ICONS =  [
@@ -32,18 +32,29 @@ def make_icon_widget(index: int, interval: int = 30) -> TextBox:
     default update duration is 30 seconds.
     """
     icon = TextBox(
-        text = sample(_ICONS, 1)[0],
-        font = "Ubuntu Bold",
         foreground = _ICON_COLORS[index % len(_ICON_COLORS)],
         fontsize = 9,
         padding = 9
     )
 
-    def updateIcon():
-        icon.update(sample(_ICONS, 1)[0])
-        t = Timer(interval, updateIcon)
-        t.daemon = True
-        t.start()
+    icon_pool = []
 
-    updateIcon()
+    def get_next_icon():
+        nonlocal icon_pool
+
+        if not icon_pool:
+            icon_pool = _ICONS.copy()
+            shuffle(icon_pool)
+
+        return icon_pool.pop()
+
+    def update_icon():
+        if hasattr(icon, "update"):
+            icon.update(get_next_icon())
+            
+        qtile.call_later(interval, update_icon)
+
+    icon.text = get_next_icon()
+    qtile.call_later(interval, update_icon)
+
     return icon
