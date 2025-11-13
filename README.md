@@ -8,7 +8,7 @@ I wanted to use a Tiling Window Manager that would allow me to add my own custom
 
 ## Features
 - High Contrast Color Theme (Dracula).  Easily swappable in the colors.py file.
-- Widget Displays for internet traffic, CPU usage, memory Usage, disk space, and time.
+- Widget Displays for internet traffic, CPU usage, memory usage, disk space, and time.
 - My personal keybinds.
 - Screen Layouts (currently built for single or two monitor setups).
 - Modular design.
